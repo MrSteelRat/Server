@@ -17,13 +17,12 @@ set(Boost_USE_STATIC_RUNTIME    OFF)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Network)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network)
 
 find_package(Boost 1.82.0 REQUIRED)
 
 add_executable(${PROJECT_NAME} main.cpp server_base.cpp server_base.h)
-add_executable(conanfile.py)
 
 if(Boost_FOUND)
     target_include_directories(${PROJECT_NAME} PRIVATE ${boost_INCLUDE_DIRS})
@@ -32,6 +31,7 @@ if(Boost_FOUND)
 endif()
 
 target_link_libraries(server Qt${QT_VERSION_MAJOR}::Core)
+target_link_libraries(server Qt${QT_VERSION_MAJOR}::Network)
 target_link_libraries(server ${Boost_LIBRARIES})
 
 install(TARGETS server
