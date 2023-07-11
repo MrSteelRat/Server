@@ -6,6 +6,8 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
+set(CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR};${CMAKE_MODULE_PATH}")
+
 set(Boost_USE_STATIC_LIBS        ON)  # only find static libs
 set(Boost_USE_DEBUG_LIBS         ON)  # ignore debug libs and
 set(Boost_USE_RELEASE_LIBS       ON)  # only find release libs
@@ -20,15 +22,14 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
 find_package(Boost 1.82.0 REQUIRED)
 
-if(Boost_FOUND)
-    include_directories(${Boost_INCLUDE_DIRS})
-    add_executable(server main.cpp)
-    target_link_libraries(server ${Boost_LIBRARIES})
-endif()
+add_executable(${PROJECT_NAME} main.cpp server_base.cpp server_base.h)
+add_executable(conanfile.py)
 
-#add_executable(server
-#    main.cpp
-#)
+if(Boost_FOUND)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${boost_INCLUDE_DIRS})
+    target_link_libraries(server ${Boost_LIBRARIES})
+    include_directories(${Boost_INCLUDE_DIRS})
+endif()
 
 target_link_libraries(server Qt${QT_VERSION_MAJOR}::Core)
 target_link_libraries(server ${Boost_LIBRARIES})
